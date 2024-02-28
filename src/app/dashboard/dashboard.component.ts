@@ -100,17 +100,38 @@ export class DashboardComponent implements OnInit {
   };
   ngOnInit() {
     this.years = Array.from({ length: this.currentYear - 2010 }, (_, index) => this.currentYear - index);
-    this.fetchTodaysRdv();
-    this.fetchThisWeeksRdv();
-    this.fetchTodaysDoneRdv();
-    this.fetchWs();
 
-    this.nbrRdvPDPM(this.currentYear, this.currentMonth);
-    this.caPDPM(this.currentYear, this.currentMonth);
-    this.nbrRdvPMPY(this.currentYear);
-    this.caPMPY(this.currentYear);
-    this.benefits(this.currentYear);
-    this.workTime(this.currentYear, this.currentMonth);
+    this.isAdmin = this.userservice.isLoggedIn();
+    if (!this.isAdmin) {
+      Promise.all([
+        this.spinner.show(),
+        this.fetchTodaysRdv(),
+        this.fetchThisWeeksRdv(),
+        this.fetchTodaysDoneRdv(),
+        this.fetchWs(),
+      ]).then(() => {
+        this.spinner.hide();
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+        this.spinner.hide();
+      });
+
+    }
+    Promise.all([
+      this.spinner.show(),
+      this.nbrRdvPDPM(this.currentYear, this.currentMonth), // Corrected here
+      this.caPDPM(this.currentYear, this.currentMonth),
+      this.nbrRdvPMPY(this.currentYear),
+      this.caPMPY(this.currentYear),
+      this.benefits(this.currentYear),
+      this.workTime(this.currentYear, this.currentMonth)
+    ]).then(() => {
+      this.spinner.hide();
+    }).catch(error => {
+      console.error('Error fetching data:', error);
+      this.spinner.hide();
+    });
+
     this.monthRdvPDPM = this.currentMonth;
     this.yearRdvPDPM = this.currentYear;
 
@@ -126,52 +147,72 @@ export class DashboardComponent implements OnInit {
     this.yearWT = this.currentYear;
     this.monthWT = this.currentMonth;
 
-    this.isAdmin = this.userservice.isLoggedIn();
   }
 
   monthRdvPDPM: number;
   yearRdvPDPM: number;
   refreshRdvPDPM() {
-    this.nbrRdvPDPM(this.yearRdvPDPM, this.monthRdvPDPM);
+    Promise.all([this.spinner.show(), this.nbrRdvPDPM(this.yearRdvPDPM, this.monthRdvPDPM)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
 
   yearRdvPMPY: number;
   refreshRdvPMPY() {
-    this.nbrRdvPMPY(this.yearRdvPMPY);
+    Promise.all([this.spinner.show(), this.nbrRdvPMPY(this.yearRdvPMPY)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
 
   monthCaPDPM: number;
   yearCaPDPM: number;
   refreshCaPDPM() {
-    this.caPDPM(this.yearCaPDPM, this.monthCaPDPM);
+    Promise.all([this.spinner.show(), this.caPDPM(this.yearCaPDPM, this.monthCaPDPM)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
 
   yearCaPMPY: number;
   refreshCaPMPY() {
-    this.caPMPY(this.yearCaPMPY);
+    Promise.all([this.spinner.show(), this.caPMPY(this.yearCaPMPY)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
   yearBenefits: number;
   refreshYearBenefits() {
-    this.benefits(this.yearBenefits);
+    Promise.all([this.spinner.show(), this.benefits(this.yearBenefits)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
   benefits(year: number) {
+    return new Promise<void>((resolve, reject) => {
 
-    this.spinner.show()
-    this.statservice.getBenefits(year).subscribe(res => {
-      this.spinner.hide();
-      const data = res.body.monthlyBenefits;
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.month);
-        series.push(d.benefits);
-      })
+      this.statservice.getBenefits(year).subscribe(res => {
+        const data = res.body.monthlyBenefits;
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.month);
+          series.push(d.benefits);
+        })
 
-      this.initBenefits(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+        this.initBenefits(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initBenefits(labels, series) {
     const dataDailySalesChart: any = {
@@ -199,25 +240,31 @@ export class DashboardComponent implements OnInit {
   monthWT: number;
   yearWT: number;
   refreshWT() {
-    this.workTime(this.yearWT, this.monthWT);
+    Promise.all([this.spinner.show(), this.workTime(this.yearWT, this.monthWT)]).then(() => {
+      this.spinner.hide();
+    }).catch((error) => {
+      console.error('error fetching data:', error);
+    })
   }
   workTime(year: number, month: number) {
-    this.spinner.show()
-    this.statservice.getWorkTime(year, month).subscribe(res => {
-      this.spinner.hide();
-      const data = res.body.result;
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.employee);
-        series.push(d.averageWorkTime);
-      })
+    return new Promise<void>((resolve, reject) => {
 
-      this.initWorkTime(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+      this.statservice.getWorkTime(year, month).subscribe(res => {
+        const data = res.body.result;
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.employee);
+          series.push(d.averageWorkTime);
+        })
+
+        this.initWorkTime(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initWorkTime(labels, series) {
     var datawebsiteViewsChart = {
@@ -252,22 +299,24 @@ export class DashboardComponent implements OnInit {
   }
 
   nbrRdvPDPM(year: number, month?: any) {
-    this.spinner.show()
-    this.statservice.get(year, month).subscribe(res => {
-      this.spinner.hide();
-      const data = res.body.appointmentsCounts;
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.day);
-        series.push(d.appointmentsCount);
-      })
+    return new Promise<void>((resolve, reject) => {
 
-      this.initrdvPDPM(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+      this.statservice.get(year, month).subscribe(res => {
+        const data = res.body.appointmentsCounts;
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.day);
+          series.push(d.appointmentsCount);
+        })
+
+        this.initrdvPDPM(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initrdvPDPM(labels, series) {
     const dataDailySalesChart: any = {
@@ -292,23 +341,25 @@ export class DashboardComponent implements OnInit {
   }
 
   nbrRdvPMPY(year: number) {
-    this.spinner.show()
-    this.statservice.get(year, '').subscribe(res => {
-      this.spinner.hide();
-      console.log(res);
-      const data = res.body.appointmentsCountsByMonth;
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.month);
-        series.push(d.appointmentsCount);
-      })
+    return new Promise<void>((resolve, reject) => {
 
-      this.initrdvPMPY(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+      this.statservice.get(year, '').subscribe(res => {
+        console.log(res);
+        const data = res.body.appointmentsCountsByMonth;
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.month);
+          series.push(d.appointmentsCount);
+        })
+
+        this.initrdvPMPY(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initrdvPMPY(labels, series) {
     var datawebsiteViewsChart = {
@@ -343,23 +394,25 @@ export class DashboardComponent implements OnInit {
   }
 
   caPDPM(year: number, month?: any) {
-    this.spinner.show()
-    this.statservice.getCa(year, month).subscribe(res => {
-      this.spinner.hide();
-      const data = res.body.turnoverByDay;
+    return new Promise<void>((resolve, reject) => {
 
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.day);
-        series.push(d.dailyTurnover);
-      })
+      this.statservice.getCa(year, month).subscribe(res => {
+        const data = res.body.turnoverByDay;
 
-      this.initCaPDPM(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.day);
+          series.push(d.dailyTurnover);
+        })
+
+        this.initCaPDPM(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initCaPDPM(labels, series) {
     const dataCompletedTasksChart: any = {
@@ -386,23 +439,25 @@ export class DashboardComponent implements OnInit {
   }
 
   caPMPY(year: number) {
-    this.spinner.show()
-    this.statservice.getCa(year, '').subscribe(res => {
-      this.spinner.hide();
-      const data = res.body.turnoverByMonth;
+    return new Promise<void>((resolve, reject) => {
 
-      var labels = [];
-      var series = [];
-      data.forEach((d) => {
-        labels.push(d.month);
-        series.push(d.monthlyTurnover);
-      })
+      this.statservice.getCa(year, '').subscribe(res => {
+        const data = res.body.turnoverByMonth;
 
-      this.initCaPMPY(labels, series);
-    }, err => {
-      this.spinner.hide();
-      console.log(err);
-    });
+        var labels = [];
+        var series = [];
+        data.forEach((d) => {
+          labels.push(d.month);
+          series.push(d.monthlyTurnover);
+        })
+
+        this.initCaPMPY(labels, series);
+        resolve();
+      }, err => {
+        reject();
+        console.log(err);
+      });
+    })
   }
   initCaPMPY(labels, series) {
     const dataCompletedTasksChart: any = {
@@ -427,64 +482,70 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchTodaysRdv() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Set dateInit to today's date
-    const dateInit = today.toISOString();
+    return new Promise<void>((resolve, reject) => {
 
-    // Set dateFin to today's date at 23:59:59
-    today.setHours(23, 59, 59, 999);
-    const dateFin = today.toISOString();
-    this.spinner.show()
-    this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.todayDateSort, 'done': false }).subscribe(response => {
-      this.spinner.hide();
-      this.todaysRdv = response.body.rdvs;
-    },
-      error => {
-        this.spinner.hide();
-        console.log(error);
-        // Unauthorized error, redirect to login page
-        this.router.navigate(['/login']); // Adjust the route as per your application
-      });
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      // Set dateInit to today's date
+      const dateInit = today.toISOString();
+
+      // Set dateFin to today's date at 23:59:59
+      today.setHours(23, 59, 59, 999);
+      const dateFin = today.toISOString();
+      this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.todayDateSort, 'done': false }).subscribe(response => {
+        this.todaysRdv = response.body.rdvs;
+        resolve();
+      },
+        error => {
+          reject();
+          console.log(error);
+          // Unauthorized error, redirect to login page
+          this.router.navigate(['/login']); // Adjust the route as per your application
+        });
+    })
   }
 
   fetchTodaysDoneRdv() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Set dateInit to today's date
-    const dateInit = today.toISOString();
+    return new Promise<void>((resolve, reject) => {
 
-    // Set dateFin to today's date at 23:59:59
-    today.setHours(23, 59, 59, 999);
-    const dateFin = today.toISOString();
-    this.spinner.show()
-    this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.todayDoneDateSort, 'done': true }).subscribe(response => {
-      this.spinner.hide();
-      this.todaysDoneRdv = response.body.rdvs;
-      var comission = 0;
-      this.todaysDoneRdv.forEach(today => {
-        today.services.forEach(service => {
-          comission = service.price * service.commission / 100;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      // Set dateInit to today's date
+      const dateInit = today.toISOString();
+
+      // Set dateFin to today's date at 23:59:59
+      today.setHours(23, 59, 59, 999);
+      const dateFin = today.toISOString();
+      this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.todayDoneDateSort, 'done': true }).subscribe(response => {
+
+        this.todaysDoneRdv = response.body.rdvs;
+        var comission = 0;
+        this.todaysDoneRdv.forEach(today => {
+          today.services.forEach(service => {
+            comission = service.price * service.commission / 100;
+          });
         });
-      });
-      this.commission = comission;
-    },
-      error => {
-        this.spinner.hide();
+        this.commission = comission;
+        resolve();
+      }, error => {
+        reject();
         console.log(error);
         // Unauthorized error, redirect to login page
         this.router.navigate(['/login']); // Adjust the route as per your application
       });
+    })
   }
 
   fetchWs() {
-    this.spinner.show()
-    this.wsservice.getMyWs().subscribe(response => {
-      this.spinner.hide();
-      this.ws = response.body.ws;
-    }, error => {
-      this.spinner.hide();
-      console.log(error);
+    return new Promise<void>((resolve, reject) => {
+
+      this.wsservice.getMyWs().subscribe(response => {
+        this.ws = response.body.ws;
+        resolve();
+      }, error => {
+        reject();
+        console.log(error);
+      })
     })
   }
 
@@ -504,34 +565,36 @@ export class DashboardComponent implements OnInit {
   }
 
   fetchThisWeeksRdv() {
-    const today = new Date();
-    const firstDayOfWeek = new Date(today);
-    const lastDayOfWeek = new Date(today);
+    return new Promise<void>((resolve, reject) => {
 
-    const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
-    const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when today is Sunday
+      const today = new Date();
+      const firstDayOfWeek = new Date(today);
+      const lastDayOfWeek = new Date(today);
 
-    firstDayOfWeek.setDate(diff);
-    lastDayOfWeek.setDate(diff + 6);
+      const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+      const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when today is Sunday
 
-    // Set time to beginning of the first day
-    firstDayOfWeek.setHours(0, 0, 0, 0);
-    const dateInit = firstDayOfWeek.toISOString();
+      firstDayOfWeek.setDate(diff);
+      lastDayOfWeek.setDate(diff + 6);
 
-    // Set time to end of the last day
-    lastDayOfWeek.setHours(23, 59, 59, 999);
-    const dateFin = lastDayOfWeek.toISOString();
-    this.spinner.show()
-    this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.weekDateSort, 'done': false }).subscribe(response => {
-      this.spinner.hide();
-      this.weeksRdv = response.body.rdvs;
-    },
-      error => {
-        this.spinner.hide();
-        console.log(error);
-        // Unauthorized error, redirect to login page
-        this.router.navigate(['/login']); // Adjust the route as per your application
-      });
+      // Set time to beginning of the first day
+      firstDayOfWeek.setHours(0, 0, 0, 0);
+      const dateInit = firstDayOfWeek.toISOString();
+
+      // Set time to end of the last day
+      lastDayOfWeek.setHours(23, 59, 59, 999);
+      const dateFin = lastDayOfWeek.toISOString();
+      this.rdvservice.getRdv({ 'dateInit': dateInit, 'dateFin': dateFin, 'limit': 100, 'page': 1, 'dateSort': this.weekDateSort, 'done': false }).subscribe(response => {
+        this.weeksRdv = response.body.rdvs;
+        resolve();
+      },
+        error => {
+          reject();
+          console.log(error);
+          // Unauthorized error, redirect to login page
+          this.router.navigate(['/login']); // Adjust the route as per your application
+        });
+    })
   }
 
   toggleCheckbox(checked: boolean, rdv: object) {
@@ -540,14 +603,12 @@ export class DashboardComponent implements OnInit {
   }
 
   update(rdv: object) {
-    this.spinner.show()
+    this.spinner.show();
     this.rdvservice.update({ 'data': rdv, 'id': rdv['_id'] }).subscribe(response => {
-      this.spinner.hide();
-      console.log(response);
       this.fetchTodaysDoneRdv();
       this.fetchTodaysRdv();
-    }, error => {
       this.spinner.hide();
+    }, error => {
       console.log(error);
       this.router.navigate(['/login']);
     });

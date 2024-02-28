@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'app/services/user.service';
+import { NgxSpinnerService } from "ngx-spinner";
+
 declare var $: any;
 
 
@@ -17,7 +19,7 @@ export class LoginComponent implements OnInit {
   hidePassword: boolean = true;
 
 
-  constructor(private fb: FormBuilder, private userservice: UserService, private router: Router) { }
+  constructor(private spinner: NgxSpinnerService, private fb: FormBuilder, private userservice: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit {
   test() {
     if (this.loginForm.valid) {
       // if (this.loginForm.value.motDePasse != this.loginForm.value.confirmerMotDePasse){ //   this.unmatched = true;// }
+      this.spinner.show();
       const data = {
         username: this.loginForm.value.identifiant,
         password: this.loginForm.value.motDePasse
@@ -45,10 +48,12 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', btoa(user.role));
           localStorage.setItem('username', user.username);
           window.location.reload();
+          this.spinner.hide();
           this.router.navigate(['/']);
 
         },
         error => {
+          this.spinner.hide();
           this.showNotification(error.error.error, 'danger');
           console.log(error);
         }

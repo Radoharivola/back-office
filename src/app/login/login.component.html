@@ -16,7 +16,8 @@
                                     Identifiant requis</mat-error>
                             </mat-form-field>
                             <mat-form-field class="example-full-width">
-                                <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="Mot de passe" formControlName="motDePasse">
+                                <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="Mot de passe"
+                                    formControlName="motDePasse">
                                 <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
                                     <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                                 </button>
@@ -24,12 +25,16 @@
                                     *ngIf="loginForm.get('motDePasse').invalid && loginForm.get('motDePasse').touched">Le
                                     Mot de passe requis</mat-error>
                             </mat-form-field>
-                            <button mat-raised-button type="submit" class="btn btn-danger pull-right">Se connecter</button>
+                            <button mat-raised-button type="submit" class="btn btn-danger pull-right">Se
+                                connecter</button>
                             <div class="clearfix"></div>
                         </form>
                     </div>
                 </div>
             </div>
+            <ngx-spinner color="#red" bdColor="rgba(0, 0, 0, 0.8)"
+                template="<img width='100px' height='100px' src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHJicWhsZmdiNGY0NjNpY241cDVkdW9vZXFmMm80ZmFuYmhwcHBtcSZlcD12MV9naWZzX3NlYXJjaCZjdD1z/L05HgB2h6qICDs5Sms/giphy.gif'>"></ngx-spinner>
+
             <div class="col-md-4"></div>
         </div>
     </div>

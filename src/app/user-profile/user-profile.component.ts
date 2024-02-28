@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/f
 import { UserService } from 'app/services/user.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from "ngx-spinner";
 
 declare var $: any;
 
@@ -22,42 +23,53 @@ export class UserProfileComponent implements OnInit {
 
   files: File[] = [];
   image: any;
-  constructor(private userservice: UserService, private fb: FormBuilder, private sanitizer: DomSanitizer, private route: Router) { }
+  constructor(private spinner: NgxSpinnerService, private userservice: UserService, private fb: FormBuilder, private sanitizer: DomSanitizer, private route: Router) { }
 
   ngOnInit() {
-    this.fetchEmp();
+    // this.spinner.show();
+    Promise.all([this.spinner.show(), this.fetchEmp()]).then(() => {
+      this.spinner.hide();
+    }).catch(err => {
+      console.log(err);
+      this.spinner.hide();
+    })
   }
   fetchEmp() {
-    this.userservice.myProfile().subscribe(data => {
-      this.employee = data.body.employee;
-      console.log(this.employee.lastName);
-      this.initForm();
-      const base64Image = data.body.profilePicture;
-      const byteCharacters = atob(base64Image);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: 'image/jpeg' });
-      const imageFile = new File([blob], 'profile_picture.jpg', { type: 'image/jpeg' });
-      this.image = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imageFile));
-      this.files = [];
-      this.files.push(imageFile);
-      console.log(this.files[0]);
-    }, err => {
-      this.userservice.logout().subscribe(response => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        this.route.navigate(['/login']);
+    return new Promise<void>((resolve, reject) => {
+      this.userservice.myProfile().subscribe(data => {
+        this.employee = data.body.employee;
+        console.log(this.employee.lastName);
+        this.initForm();
+        const base64Image = data.body.profilePicture;
+        const byteCharacters = atob(base64Image);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' });
+        const imageFile = new File([blob], 'profile_picture.jpg', { type: 'image/jpeg' });
+        this.image = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(imageFile));
+        this.files = [];
+        this.files.push(imageFile);
+        console.log(this.files[0]);
+        resolve();
       }, err => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        this.route.navigate(['/login']);
+        this.userservice.logout().subscribe(response => {
+          reject();
+          localStorage.removeItem('token');
+          localStorage.removeItem('username');
+          this.route.navigate(['/login']);
+        }, err => {
+          reject();
+          localStorage.removeItem('token');
+          localStorage.removeItem('username');
+          this.route.navigate(['/login']);
+          console.log(err);
+        });
         console.log(err);
       });
-      console.log(err);
-    });
+    })
   }
   initForm() {
 
@@ -95,7 +107,7 @@ export class UserProfileComponent implements OnInit {
       return;
     }
     if (this.employeeForm.value.motDePasse === this.employeeForm.value.confirmerMotDePasse) {
-      console.log("null" );
+      console.log("null");
     } else {
       this.showNotification("Les mdp ne correspondent pas!", 'danger');
 
@@ -103,7 +115,7 @@ export class UserProfileComponent implements OnInit {
     }
     if (this.employeeForm.valid) {
       // if (this.employeeForm.value.motDePasse != this.employeeForm.value.confirmerMotDePasse){ //   this.unmatched = true;// }
-
+      this.spinner.show();
       const formData = new FormData();
       formData.append('pic', this.files[0]);
       formData.append('username', this.employeeForm.value.identifiant);
@@ -125,7 +137,12 @@ export class UserProfileComponent implements OnInit {
 
           console.log(response);
           this.showNotification(response.message, 'success');
-          this.fetchEmp();
+          Promise.all([this.fetchEmp()]).then(() => {
+            this.spinner.hide();
+          }).catch(err => {
+            this.spinner.hide();
+            console.log(err);
+          })
         },
         error => {
           // this.success = false;
@@ -134,6 +151,7 @@ export class UserProfileComponent implements OnInit {
           //   this.error = false;
           // }, 5000);
           // this.message = error.error.message;
+          this.spinner.hide();
           this.showNotification(error.error.error, 'danger');
 
           console.log(error.error.error);
