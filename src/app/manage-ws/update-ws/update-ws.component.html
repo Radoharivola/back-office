@@ -1,0 +1,55 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <button mat-raised-button type="submit" class="btn btn-info btn-round pull-right btn-just-icon"
+                    (click)="enregister()">
+                    <i class="material-icons">save</i>
+                </button>
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="text-danger text-center">
+                                    <th>Jour</th>
+                                    <th>Début</th>
+                                    <th>Fin</th>
+                                    <th>Modifier</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let day of dayOfWeek" class="text-center">
+                                        <td [class.disabled-row]="!day.editMode">{{day.day}}</td>
+                                        <td>
+                                            <div class="row" [class.disabled-row]="!day.editMode">
+                                                <div class="col-md-3">
+                                                    <input [(ngModel)]="day.debutHour" (ngModelChange)="updateHours(day, 'debutHour', $event)" type="number" min="0" max="23" placeholder="HH" [readonly]="!day.editMode">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input [(ngModel)]="day.debutMin" type="number" min="0" max="59" placeholder="MM" [readonly]="!day.editMode">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="row" [class.disabled-row]="!day.editMode">
+                                                <div class="col-md-3">
+                                                    <input [(ngModel)]="day.finHour" (ngModelChange)="updateHours(day, 'finHour', $event)" type="number" min="0" max="23" placeholder="HH" [readonly]="!day.editMode">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input [(ngModel)]="day.finMin" type="number" min="0" max="59" placeholder="MM" [readonly]="!day.editMode">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" [(ngModel)]="day.editMode" (click)="test($event)"> 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

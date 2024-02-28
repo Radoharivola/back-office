@@ -1,0 +1,84 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <button mat-raised-button type="submit" class="btn btn-info btn-round pull-right btn-just-icon"
+                    (click)="navigateToAdd()">
+                    <i class="material-icons">add</i>
+                </button>
+                <div class="card">
+                    <!-- <div class="card-header">
+                        <form class="navbar-form">
+                            <div class="input-group">
+                                <input type="text"  class="form-control" placeholder="Recherche..." #searchInput (input)="updateSearchString(searchInput.value)">
+                            </div>
+                        </form>
+                    </div> -->
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="text-danger text-center">
+                                    <th><button class="btn btn-link btn-danger"
+                                            >Nom</button>
+
+                                    </th>
+                                    <th><button class="btn btn-link btn-danger"
+                                            >Durée</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger"
+                                            >Description</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger"
+                                            >Comission</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger">Price</button>
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let service of services" class="text-center">
+                                        <td>
+                                            {{service.name}}
+                                        </td>
+                                        <td>
+                                            {{service.duration}}
+                                        </td>
+                                        <td>
+                                            {{service.description}}
+                                        </td>
+                                        <td>
+                                            {{service.commission}}
+                                        </td>
+                                        <td>
+                                            {{service.price}}
+                                        </td>
+                                        <td>
+                                            <button mat-raised-button type="submit"
+                                                class="btn btn-info btn-round btn-just-icon"
+                                                (click)="navigateToUpdate(service._id)">
+                                                <i class="material-icons">edit</i>
+                                                <div class="ripple-container"></div>
+                                            </button> <button mat-raised-button type="submit"
+                                                class="btn btn-danger btn-round btn-just-icon"
+                                                (click)="delete(service._id)">
+                                                <i class="material-icons">delete</i>
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ngx-spinner color="#red" bdColor="rgba(0, 0, 0, 0.8)" template="<img width='100px' height='100px' src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHJicWhsZmdiNGY0NjNpY241cDVkdW9vZXFmMm80ZmFuYmhwcHBtcSZlcD12MV9naWZzX3NlYXJjaCZjdD1z/L05HgB2h6qICDs5Sms/giphy.gif'>"></ngx-spinner>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

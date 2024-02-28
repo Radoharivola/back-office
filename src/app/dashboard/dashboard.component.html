@@ -1,0 +1,657 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row" *ngIf="!isAdmin">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">info_outline</i>
+                        </div>
+                        <p class="card-category">Rendez-vous aujourd'hui</p>
+                        <h3 class="card-title">{{ todaysRdv?.length !== undefined ? todaysRdv?.length : 0 }}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">warning</i> Voir les rendez-vous ci-dessous
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">today</i>
+                        </div>
+                        <p class="card-category">Cette semaine</p>
+                        <h3 class="card-title">{{ weeksRdv?.length !== undefined ? weeksRdv?.length : 0 }}
+                            <small>rdvs</small>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">today</i>Vos rendez-vous cette semaine
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">wallet</i>
+                        </div>
+                        <p class="card-category">Commission</p>
+                        <h3 class="card-title">MGA {{commission}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">date_range</i> Cette semaine
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">star</i>
+                        </div>
+                        <p class="card-category">Likes</p>
+                        <h3 class="card-title">+245</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">star</i> Clients qui vous ont ajouté dans leur préférence
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="!isAdmin">
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-tabs card-header-primary">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <span class="nav-tabs-title">Rendez-vous:</span>
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+
+                                        <a mat-button class="nav-link" href="#settings" data-toggle="tab">
+                                            <i class="material-icons">date_range</i> Cette semaine
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link active" href="#profile" data-toggle="tab">
+                                            <i class="material-icons">today</i> Aujourd'hui
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link" href="#messages" data-toggle="tab">
+                                            Terminés
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="profile">
+                                <table class="table">
+                                    <thead>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            <a (click)="flipTodayDateSort()" class="link">Date</a>
+                                        </th>
+                                        <th>
+                                            services
+                                        </th>
+                                        <th>
+                                            annuler
+                                        </th>
+                                    </thead>
+                                    <tbody *ngIf="todaysRdv && todaysRdv.length > 0; else noToday">
+                                        <tr *ngFor="let rdv of todaysRdv">
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <!-- <input class="form-check-input" type="checkbox" value="" checked> -->
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [checked]="rdv.done"
+                                                            (change)="toggleCheckbox($event.target.checked, rdv)">
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ rdv.date | relativeTime}}
+                                            </td>
+                                            <td>
+                                                <span *ngFor="let service of rdv.services">{{service.name+' '}}</span>
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                    <ng-template #noToday>
+                                        <tr>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                        </tr>
+                                    </ng-template>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="messages">
+                                <table class="table">
+                                    <thead>
+                                        <th>
+
+                                        </th>
+                                        <th>
+                                            <a (click)="flipTodayDoneDateSort()" class="link">Date</a>
+                                        </th>
+                                        <th>
+                                            services
+                                        </th>
+                                        <th>
+                                            annuler
+                                        </th>
+                                    </thead>
+                                    <tbody *ngIf="todaysDoneRdv && todaysDoneRdv.length > 0; else noDone">
+                                        <tr *ngFor="let rdv of todaysDoneRdv">
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <!-- <input class="form-check-input" type="checkbox" value="" checked> -->
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [checked]="rdv.done"
+                                                            (change)="toggleCheckbox($event.target.checked, rdv)">
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ rdv.date | relativeTime}}
+                                            </td>
+                                            <td>
+                                                <span *ngFor="let service of rdv.services">{{service.name+' '}}</span>
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                    <ng-template #noDone>
+                                        <tr>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </ng-template>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="settings">
+                                <table class="table">
+                                    <thead>
+                                        <th>
+                                            <a (click)="flipWeekDateSort()" class="link">Date</a>
+                                        </th>
+                                        <th>
+                                            services
+                                        </th>
+                                        <th>
+                                            annuler
+                                        </th>
+                                    </thead>
+                                    <tbody *ngIf="weeksRdv && weeksRdv.length > 0; else noWeek">
+                                        <tr *ngFor="let rdv of weeksRdv">
+                                            <td>
+                                                {{ rdv.date | relativeTime}}
+                                            </td>
+                                            <td>
+                                                <span *ngFor="let service of rdv.services">{{service.name+' '}}</span>
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                    <ng-template #noWeek>
+                                        <tr>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                            <td>Aucun rendez-vous</td>
+                                        </tr>
+                                    </ng-template>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" *ngIf="!isAdmin">
+
+            <div class="col-lg-12 col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Horaires de travail</h4>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="text-warning">
+                                <th>Jour</th>
+                                <th>Début</th>
+                                <th>Fin</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let day of ws">
+                                    <td>{{day.day}}</td>
+                                    <td>{{day.debutHour}}:{{day.debutMin}}</td>
+                                    <td>{{day.finHour}}:{{day.finMin}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="isAdmin">
+            <div class="col-md-8">
+                <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div class="ct-chart" id="dailySalesChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Nombre de renez-vous journalier/mois</h4>
+                        <p class="card-category">
+                            <select class="shit" [(ngModel)]="monthRdvPDPM" (change)="refreshRdvPDPM()">
+                                <option *ngFor="let month of monthList" [value]="month.index"
+                                    [attr.selected]="month.index === currentMonth ? true : null">
+                                    {{ month.month }}
+                                </option>
+                            </select>
+                            <select class="shit" [(ngModel)]="yearRdvPDPM" (change)="refreshRdvPDPM()">
+                                <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                            </select>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div class="ct-chart" id="websiteViewsChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Nombre de rendez-vous mensuel</h4>
+                        <select class="shit" [(ngModel)]="yearRdvPMPY" (change)="refreshRdvPMPY()">
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="col-md-4">
+                <div class="card card-chart">
+                    <div class="card-header card-header-danger">
+                        <div class="ct-chart" id="capmpy"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Chiffre d'affaire mensuel</h4>
+                        <select class="shit" [(ngModel)]="yearCaPMPY" (change)="refreshCaPMPY()">
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-chart">
+                    <div class="card-header card-header-danger">
+                        <div class="ct-chart" id="completedTasksChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Chiffre d'affaire journalier/mois</h4>
+                        <select class="shit" [(ngModel)]="monthCaPDPM" (change)="refreshCaPDPM()">
+                            <option *ngFor="let month of monthList" [value]="month.index"
+                                [attr.selected]="month.index === currentMonth ? true : null">
+                                {{ month.month }}
+                            </option>
+                        </select>
+                        <select class="shit" [(ngModel)]="yearCaPDPM" (change)="refreshCaPDPM()">
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-primary">
+                        <div class="ct-chart" id="benefits"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Bénéfices mensuels</h4>
+                        <select class="shit" [(ngModel)]="yearBenefits" (change)="refreshYearBenefits()">
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header card-header-primary">
+                        <div class="ct-chart" id="workTime"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Temps de travail (moyenne en minutes)</h4>
+                        <select class="shit" [(ngModel)]="monthWT" (change)="refreshWT()">
+                            <option *ngFor="let month of monthList" [value]="month.index"
+                                [attr.selected]="month.index === currentMonth ? true : null">
+                                {{ month.month }}
+                            </option>
+                        </select>
+                        <select class="shit" [(ngModel)]="yearWT" (change)="refreshWT()">
+                            <option *ngFor="let year of years" value="{{year}}">{{year}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-tabs card-header-primary">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <span class="nav-tabs-title">Rendez-vous:</span>
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link" href="#settings" data-toggle="tab">
+                                            Aujourd'hui
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link active" href="#profile" data-toggle="tab">
+                                            à venir
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a mat-button class="nav-link" href="#messages" data-toggle="tab">
+                                            Terminés
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="profile">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            checked>
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="messages">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            checked>
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Flooded: One year later, assessing what was lost and what was found when
+                                                a ravaging rain swept through metro Detroit
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="settings">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value="">
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            checked>
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Flooded: One year later, assessing what was lost and what was found when
+                                                a ravaging rain swept through metro Detroit
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                            checked>
+                                                        <span class="form-check-sign">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                                            <td class="td-actions text-right">
+                                                <button mat-raised-button type="button" matTooltip="Edit Task"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-primary btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button mat-raised-button type="button" matTooltip="Remove"
+                                                    [matTooltipPosition]="'above'"
+                                                    class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title">Employees Stats</h4>
+                        <p class="card-category">New employees on 15th September, 2016</p>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="text-warning">
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Salary</th>
+                                <th>Country</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Dakota Rice</td>
+                                    <td>$36,738</td>
+                                    <td>Niger</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Minerva Hooper</td>
+                                    <td>$23,789</td>
+                                    <td>Curaçao</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Sage Rodriguez</td>
+                                    <td>$56,142</td>
+                                    <td>Netherlands</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Philip Chaney</td>
+                                    <td>$38,735</td>
+                                    <td>Korea, South</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header card-header-danger">
+                <h4 class="card-title">Nouvelle offer</h4>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="offerForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Description" formControlName="description">
+                                <mat-error
+                                    *ngIf="offerForm.get('description').invalid && offerForm.get('description').touched">La
+                                    description est requise</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Réduction" formControlName="reduction"
+                                    type="number">
+                                <mat-error
+                                    *ngIf="offerForm.get('reduction').invalid && offerForm.get('reduction').touched">La réduction est requise</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Date Debut" formControlName="dateDebut"
+                                    type="datetime-local">
+                                <mat-error
+                                    *ngIf="offerForm.get('dateDebut').invalid && offerForm.get('dateDebut').touched">Date
+                                    début est requise</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Date fin" type="datetime-local" formControlName="dateFin">
+                                <mat-error
+                                    *ngIf="offerForm.get('dateFin').invalid && offerForm.get('dateFin').touched">Date
+                                    fin
+                                    est requise</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3" *ngFor="let service of services">
+                            <input type="checkbox"  [checked]="isInSS(service)" (change)="updateSelectedServices(service, $event.target.checked)">{{service.name}}
+                        </div>
+                    </div>
+                    <button mat-raised-button type="submit" class="btn btn-danger pull-right">Ajouter</button>
+                    <div class="clearfix"></div>
+                </form>
+                <ngx-spinner color="#red" bdColor="rgba(0, 0, 0, 0.8)" template="<img width='100px' height='100px' src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHJicWhsZmdiNGY0NjNpY241cDVkdW9vZXFmMm80ZmFuYmhwcHBtcSZlcD12MV9naWZzX3NlYXJjaCZjdD1z/L05HgB2h6qICDs5Sms/giphy.gif'>"></ngx-spinner>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>yay</p>

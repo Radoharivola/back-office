@@ -1,0 +1,75 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <form class="navbar-form">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Recherche..." #searchInput
+                                    (input)="updateSearchString(searchInput.value)">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="text-danger text-center">
+                                    <th><button class="btn btn-link btn-danger"
+                                            (click)="setSort('lastName')">Nom</button>
+
+                                    </th>
+                                    <th><button class="btn btn-link btn-danger"
+                                            (click)="setSort('firstName')">Prénom</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger"
+                                            (click)="setSort('email')">Email</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger"
+                                            (click)="setSort('username')">Identifiant</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-link btn-danger">Téléphone</button>
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let employee of employees" class="text-center">
+                                        <td>
+                                            {{employee.lastName}}
+                                        </td>
+                                        <td>
+                                            {{employee.firstName}}
+                                        </td>
+                                        <td>
+                                            {{employee.email}}
+                                        </td>
+                                        <td>
+                                            {{employee.username}}
+                                        </td>
+                                        <td>
+                                            {{employee.phone}}
+                                        </td>
+                                        <td>
+                                            <button mat-raised-button type="submit"
+                                                class="btn btn-info btn-round btn-just-icon"
+                                                (click)="navigateToUpdate(employee._id)">
+                                                <i class="material-icons">edit</i>
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

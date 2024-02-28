@@ -1,0 +1,36 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Se connecter</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="loginForm" (ngSubmit)="test()">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Identifiant" formControlName="identifiant">
+                                <mat-error
+                                    *ngIf="loginForm.get('identifiant').invalid && loginForm.get('identifiant').touched">
+                                    Identifiant requis</mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="example-full-width">
+                                <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="Mot de passe" formControlName="motDePasse">
+                                <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+                                    <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                </button>
+                                <mat-error
+                                    *ngIf="loginForm.get('motDePasse').invalid && loginForm.get('motDePasse').touched">Le
+                                    Mot de passe requis</mat-error>
+                            </mat-form-field>
+                            <button mat-raised-button type="submit" class="btn btn-danger pull-right">Se connecter</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</div>

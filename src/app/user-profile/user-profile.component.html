@@ -1,0 +1,120 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header card-header-danger">
+                  <h4 class="card-title">Modifier</h4>
+              </div>
+              <div class="card-body">
+                  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+                      <div class="row">
+                          <div class="col-md-4">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Nom" formControlName="nom">
+                                  <mat-error *ngIf="employeeForm.get('nom').invalid && employeeForm.get('nom').touched">Le
+                                      nom est requis</mat-error>
+                              </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Prénom" formControlName="prenom">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('prenom').invalid && employeeForm.get('prenom').touched">Le
+                                      prénom est requis</mat-error>
+                              </mat-form-field>
+                          </div>
+                          <div class="col-md-4">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Email" type="email" formControlName="email">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('email').invalid && employeeForm.get('email').touched">L'email
+                                      est requis</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-6">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Identifiant" type="text" formControlName="identifiant">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('identifiant').invalid && employeeForm.get('identifiant').touched">L'identifiant
+                                      est requis</mat-error>
+                              </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Numéro de téléphone" type="text"
+                                      formControlName="telephone">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('telephone').invalid && employeeForm.get('telephone').touched">Le
+                                      numéro de téléphone est requis</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+  
+                      <div class="row">
+                          <div class="col-md-6">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Mot de passe" type="password" formControlName="motDePasse">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('motDePasse').invalid && employeeForm.get('motDePasse').touched">Le
+                                      mot de passe est requis</mat-error>
+                                  <mat-error
+                                      *ngIf="employeeForm.errors?.notSame && employeeForm.get('confirmerMotDePasse').touched">
+                                      Les mots de passe doivent être identiques
+                                  </mat-error>
+                              </mat-form-field>
+                          </div>
+                          <div class="col-md-6">
+                              <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Confirmer mot de passe" type="password"
+                                      formControlName="confirmerMotDePasse">
+                                  <mat-error
+                                      *ngIf="employeeForm.get('confirmerMotDePasse').invalid && employeeForm.get('confirmerMotDePasse').touched">Veuillez
+                                      confirmer votre mot de passe</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+  
+                      <div class="row">
+                          <div class="col-md-4">
+                          </div>
+                          <div class="col-md-4 text-center">
+                              <ngx-dropzone (change)="onSelect($event)" [processDirectoryDrop]="true" [multiple]="false">
+                                  <ngx-dropzone-label>Choisir photo de profil / déposer!</ngx-dropzone-label>
+                                  <ngx-dropzone-image-preview *ngFor="let f of files" [removable]="true"
+                                      (removed)="onRemove(f)" [file]="f">
+                                  </ngx-dropzone-image-preview>
+                              </ngx-dropzone>
+                              <span *ngIf="fileEmpty" class="text-danger">Veuillez choisir une photo de profil!</span>
+  
+                          </div>
+                          <div class="col-md-4">
+                          </div>
+                      </div>
+  
+                      <button mat-raised-button type="submit" class="btn btn-danger pull-right">Modifier</button>
+                      <div class="clearfix"></div>
+                  </form>
+              </div>
+          </div>
+          </div>
+          <div class="col-md-4">
+              <div class="card card-profile">
+                  <div class="card-avatar">
+                      <a href="javascript:void(0)">
+                          <img class="img" [src]="image" />
+                      </a>
+                  </div>
+                  <div class="card-body">
+                      <h6 class="card-category text-gray">{{employee.role.roleName}}</h6>
+                      <h4 class="card-title">{{employee.firstName}} {{employee.lastName}}</h4>
+                      
+                      <!-- <a href="javascript:void(0)" class="btn btn-danger btn-round" (click)="showNotification('fory')">Follow</a> -->
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
