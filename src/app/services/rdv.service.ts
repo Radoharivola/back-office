@@ -17,10 +17,10 @@ export class RdvService {
 
 
   getRdv({ dateInit, dateFin, limit, page, dateSort, done }: { dateInit: string, dateFin: string, limit: number, page: number, dateSort: number, done: boolean }): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/rdv/emp/' + dateInit + '/' + dateFin + '/' + limit + '/' + page + '/' + dateSort + '?done=' + done, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/rdv/emp/' + dateInit + '/' + dateFin + '/' + limit + '/' + page + '/' + dateSort + '?done=' + done, this.httpOptions);
   }
 
   update({ data, id }: { data: any, id: any }): Observable<any> {
-    return this.http.put('http://127.0.0.1:3000/rdv/' + id, data, this.httpOptions);
+    return this.http.put('https://m1p11mean-aro-kenny-1.onrender.com/rdv/' + id, data, this.httpOptions);
   }
 }

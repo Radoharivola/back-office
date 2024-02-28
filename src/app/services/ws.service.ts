@@ -16,13 +16,13 @@ export class WsService {
   constructor(private http: HttpClient) { }
 
   getWs(empId: string): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/workSchedule/ws/' + empId, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/workSchedule/ws/' + empId, this.httpOptions);
   }
   update(id: string, data: any): Observable<any> {
-    return this.http.put('http://127.0.0.1:3000/workSchedule/' + id, data, this.httpOptions);
+    return this.http.put('https://m1p11mean-aro-kenny-1.onrender.com/workSchedule/' + id, data, this.httpOptions);
   }
 
   getMyWs(): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/workSchedule/emp', this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/workSchedule/emp', this.httpOptions);
   }
 }

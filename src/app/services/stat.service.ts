@@ -18,16 +18,16 @@ export class StatService {
 
 
   get(year: number, month?: any): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/rdv/stat/' + year + '/' + month, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/rdv/stat/' + year + '/' + month, this.httpOptions);
   }
   getCa(year: number, month?: any): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/rdv/ca/' + year + '/' + month, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/rdv/ca/' + year + '/' + month, this.httpOptions);
   }
   getBenefits(year: number): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/depense/benefits-per-month/' + year, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/depense/benefits-per-month/' + year, this.httpOptions);
   }
   getWorkTime(year: number, month: any): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/workSchedule/' + year + '/' + month, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/workSchedule/' + year + '/' + month, this.httpOptions);
 
   }
 }

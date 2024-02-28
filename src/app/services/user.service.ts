@@ -17,35 +17,35 @@ export class UserService {
 
 
   getEmployees({ searchString, sortBy, sortOrder }): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/users/employees?searchString=' + searchString + '&sortBy=' + sortBy + '&sortOrder=' + sortOrder, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/users/employees?searchString=' + searchString + '&sortBy=' + sortBy + '&sortOrder=' + sortOrder, this.httpOptions);
   }
 
   getEmployee(id: string): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/users/employee/' + id, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/users/employee/' + id, this.httpOptions);
   }
 
   newEmployee({ formData }: { formData: FormData; }): Observable<any> {
-    return this.http.post('http://127.0.0.1:3000/auth/register', formData);
+    return this.http.post('https://m1p11mean-aro-kenny-1.onrender.com/auth/register', formData);
   }
 
   updateEmployee({ formData, id }: { formData: FormData, id: string; }): Observable<any> {
-    return this.http.put('http://127.0.0.1:3000/auth/users/' + id, formData, { withCredentials: true });
+    return this.http.put('https://m1p11mean-aro-kenny-1.onrender.com/auth/users/' + id, formData, { withCredentials: true });
   }
 
   deleteEmployee(id: string): Observable<any> {
-    return this.http.delete('http://127.0.0.1:3000/auth/users/' + id);
+    return this.http.delete('https://m1p11mean-aro-kenny-1.onrender.com/auth/users/' + id);
   }
 
   login({ data }: { data: any; }): Observable<any> {
-    return this.http.post('http://127.0.0.1:3000/auth/BOlogin', data, this.httpOptions);
+    return this.http.post('https://m1p11mean-aro-kenny-1.onrender.com/auth/BOlogin', data, this.httpOptions);
   }
 
   myProfile(): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/users/emp/profile', this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/users/emp/profile', this.httpOptions);
   }
 
   // test(): Observable<any> {
-  //   return this.http.get('http://127.0.0.1:3000/protected', this.httpOptions);
+  //   return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/protected', this.httpOptions);
   // // }
   // test(): boolean {
   //   return false;
@@ -83,7 +83,7 @@ export class UserService {
   }
 
   logout(): Observable<any> {
-    return this.http.post('http://127.0.0.1:3000/auth/logout', null, this.httpOptions);
+    return this.http.post('https://m1p11mean-aro-kenny-1.onrender.com/auth/logout', null, this.httpOptions);
   }
 
 }

@@ -16,23 +16,23 @@ export class AchatsService {
   constructor(private http: HttpClient) { }
 
   getAchats(): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/depense/achats');
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/depense/achats');
   }
 
   newAchats({ data }: { data: any; }): Observable<any> {
-    return this.http.post('http://127.0.0.1:3000/depense/new', data);
+    return this.http.post('https://m1p11mean-aro-kenny-1.onrender.com/depense/new', data);
   }
 
   deleteAchats(id: string): Observable<any> {
-    return this.http.delete('http://127.0.0.1:3000/depense/delete/'+id);
+    return this.http.delete('https://m1p11mean-aro-kenny-1.onrender.com/depense/delete/'+id);
   }
 
   update({ data, id }: { data: any, id: any }): Observable<any> {
-    return this.http.put('http://127.0.0.1:3000/depense/update/'+id, data, this.httpOptions);
+    return this.http.put('https://m1p11mean-aro-kenny-1.onrender.com/depense/update/'+id, data, this.httpOptions);
 
   }
 
   getAchat({ id }: { id: any }): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/depense/achats/' + id, this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/depense/achats/' + id, this.httpOptions);
   }
 }

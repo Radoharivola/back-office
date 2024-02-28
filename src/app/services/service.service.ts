@@ -19,23 +19,23 @@ httpOptions = {
   
 
   newService({ data }: { data: any; }): Observable<any> {
-    return this.http.post('http://127.0.0.1:3000/service/new', data);
+    return this.http.post('https://m1p11mean-aro-kenny-1.onrender.com/service/new', data);
   }
 
   deleteService(id: string): Observable<any> {
-    return this.http.delete('http://127.0.0.1:3000/service/delete/'+id);
+    return this.http.delete('https://m1p11mean-aro-kenny-1.onrender.com/service/delete/'+id);
   }
 
   updateService({ data, id }: { data: any, id: string; }): Observable<any> {
-    return this.http.put('http://127.0.0.1:3000/service/update/'+id, data);
+    return this.http.put('https://m1p11mean-aro-kenny-1.onrender.com/service/update/'+id, data);
   }
 
   getService(id: string): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/service/service/' + id);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/service/service/' + id);
 
   }
   getServices(): Observable<any> {
-    return this.http.get('http://127.0.0.1:3000/service/services', this.httpOptions);
+    return this.http.get('https://m1p11mean-aro-kenny-1.onrender.com/service/services', this.httpOptions);
 
   }
 }
