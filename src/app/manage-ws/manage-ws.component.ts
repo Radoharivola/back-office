@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { UserService } from 'app/services/user.service';
+import { NgxSpinnerService } from "ngx-spinner";
+
 @Component({
   selector: 'app-manage-ws',
   templateUrl: './manage-ws.component.html',
@@ -12,7 +14,7 @@ export class ManageWsComponent implements OnInit {
   searchString: string = '';
 
   employees: any[];
-  constructor(private router: Router, private userservice: UserService) { }
+  constructor(private spinner: NgxSpinnerService, private router: Router, private userservice: UserService) { }
 
   ngOnInit(): void {
     this.fetchEmployees();
@@ -28,8 +30,10 @@ export class ManageWsComponent implements OnInit {
   }
 
   fetchEmployees() {
+    this.spinner.show();
     this.userservice.getEmployees({ 'searchString': this.searchString, 'sortBy': this.sortBy, 'sortOrder': this.sortOrder }).subscribe(data => {
       this.employees = data.body.employees;
+      this.spinner.hide();
     }, error => {
       localStorage.removeItem('token');
       localStorage.removeItem('username');

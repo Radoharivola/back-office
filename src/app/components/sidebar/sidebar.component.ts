@@ -21,6 +21,8 @@ export const ROUTES: RouteInfo[] = [
     //end
     //achats related
     { path: '/achats/list', title: 'Achats',  icon:'library_books', class: '' },
+    { path: '/ws/list', title: 'Horaire de travail',  icon:'library_books', class: '' },
+
     // //end
     // { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' },
     // { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
